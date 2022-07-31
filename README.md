@@ -1,146 +1,93 @@
-<!--lint disable no-html-->
-<img src="https://github.com/radiantearth/stac-site/raw/master/images/logo/stac-030-long.png" alt="stac-logo" width="700"/>
+# STAC API - Transaction 
 
-# STAC API
+*based on [**OGC API - Features - Part 4: Simple Transactions**](https://www.ogc.org/standards/ogcapi-features)*
 
-- [STAC API](#stac-api)
-  - [Releases (stable)](#releases-stable)
-  - [Development (unstable)](#development-unstable)
-  - [About](#about)
-  - [Stability Note](#stability-note)
-  - [Maturity Classification](#maturity-classification)
-  - [Communication](#communication)
-  - [In this repository](#in-this-repository)
-  - [Contributing](#contributing)
+- **OpenAPI specification:** [openapi.yaml](openapi.yaml)
+- **Conformance URIs:**
+  - <https://api.stacspec.org/v1.0.0-rc.1/ogcapi-features/extensions/transaction>
+  - <http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/simpletx>
+- **Extension [Maturity Classification](https://github.com/radiantearth/stac-api-spec/README.md#maturity-classification):** Candidate
+- **Dependencies**: [STAC API - Features](https://github.com/radiantearth/stac-api-spec/ogcapi-features/README.md)
 
-## Releases (stable)
+The core STAC API doesn't support adding, editing, or removing items.
+The transaction API extension supports the creation, editing, and deleting of items through POST, PUT, PATCH, and DELETE requests.
 
-- [v1.0.0-rc.1](https://github.com/radiantearth/stac-api-spec/tree/v1.0.0-rc.1) (latest)
-- [v1.0.0-beta.5](https://github.com/radiantearth/stac-api-spec/tree/v1.0.0-beta.5)
-- [v1.0.0-beta.4](https://github.com/radiantearth/stac-api-spec/tree/v1.0.0-beta.4)
-- [v1.0.0-beta.3](https://github.com/radiantearth/stac-api-spec/tree/v1.0.0-beta.3)
-- [v1.0.0-beta.2](https://github.com/radiantearth/stac-api-spec/tree/v1.0.0-beta.2)
-- [v1.0.0-beta.1](https://github.com/radiantearth/stac-api-spec/tree/v1.0.0-beta.1)
-- [v0.9.0](https://github.com/radiantearth/stac-api-spec/tree/v0.9.0)
+STAC Transactions are based on the [OGC API - Features](https://ogcapi.ogc.org/features/) transactions, as 
+specified in [Part 4: Simple Transactions](http://docs.opengeospatial.org/DRAFTS/20-002.html). The core
+OGC standard lays out the end points for transactions, without specifying any content types. For STAC we
+use STAC Item objects in our transactions, and those transaction must be done at the OGC API - Features endpoints,
+under `/collections/{collectionID}/items`. The OpenAPI document (specified as an OpenAPI fragment that 
+gets build in the full STAC OpenAPI document) simply gives the STAC examples of using the
+Simple Transactions API mechanism.
 
-## Development (unstable)
+OGC API [Simple Transactions](http://docs.opengeospatial.org/DRAFTS/20-002.html) is still a draft standard, so 
+once it is released STAC will align to a released one, but we anticipate few changes as it is a very simple document.
 
-The [main](https://github.com/radiantearth/stac-api-spec/tree/main) branch in GitHub is
-used for active development and may be unstable. Implementers should reference one of
-the release branches above for a stable version of the specification.
-**NOTE**: This means that if you are on github.com/radiantearth/stac-api-spec then you are looking at an unreleased,
-unstable version of the specification. Use the first listed link on releases to read the current released, stable version
-of the spec.
-## About
+STAC Transactions additionally support optimistic locking through use of the ETag header, as specified in the
+OpenAPI document. This is not currently specified in *OGC API - Features*, but it is compatible and we will 
+work to get it incorporated.
 
-The SpatioTemporal Asset Catalog (STAC) family of specifications aim to standardize the way geospatial asset metadata is structured and queried.
-A 'spatiotemporal asset' is any file that represents information about the earth captured in a certain space and 
-time. The core STAC specifications live in the GitHub repository [radiantearth/stac-spec](https://github.com/radiantearth/stac-spec).
+## Methods
 
-A STAC API is the dynamic version of a SpatioTemporal Asset Catalog. It returns a STAC [Catalog](stac-spec/catalog-spec/catalog-spec.md), 
-[Collection](stac-spec/collection-spec/collection-spec.md), [Item](stac-spec/item-spec/item-spec.md), 
-or a STAC API [ItemCollection](fragments/itemcollection/README.md), depending on the endpoint.
-Catalog and Collection objects are JSON, while Item and ItemCollection objects are GeoJSON-compliant entities with foreign members.  
-Typically, a Feature is used when returning a single Item object, and FeatureCollection when multiple Item objects (rather than a 
-JSON array of Item entities).
+| Path                                                   | Content-Type Header | Body                                   | Success Status | Description                                                       |
+| ------------------------------------------------------ | ------------------- | -------------------------------------- | -------------- | ----------------------------------------------------------------- |
+| `POST /collections/{collectionID}/items`               | `application/json`  | partial Item or partial ItemCollection | 201, 202       | Adds a new item to a collection.                                  |
+| `PUT /collections/{collectionId}/items/{featureId}`    | `application/json`  | partial Item                           | 200, 202, 204  | Updates an existing item by ID using a complete item description. |
+| `PATCH /collections/{collectionId}/items/{featureId}`  | `application/json`  | partial Item                           | 200, 202, 204  | Updates an existing item by ID using a partial item description.  |
+| `DELETE /collections/{collectionID}/items/{featureId}` | n/a                 | n/a                                    | 200, 202, 204  | Deletes an existing item by ID.                                   |
 
-The API can be implemented in compliance with the *[OGC API - Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html)* standard 
-(OAFeat is a shorthand). In this case STAC API can be thought of as a specialized Features API 
+### POST
 
-to search STAC catalogs, where the features returned are STAC [Item](stac-spec/item-spec/item-spec.md) objects, 
-that have common properties, links to their assets and geometries that represent the footprints of the geospatial assets.
+When the body is a partial Item:
 
-The specification for STAC API is provided as files that follow the [OpenAPI](http://openapis.org/) 3.0 specification, 
-rendered online into HTML at <https://api.stacspec.org/v1.0.0-rc.1>, in addition to human-readable documentation.  
+- Must only create a new resource.
+- Must have an id field.
+- Must return 409 if an Item exists for the same collection and id field values.
+- Must populate the `collection` field in the Item from the URI.
+- Must return 201 and a Location header with the URI of the newly added resource for a successful operation.
+- May return the content of the newly added resource for a successful operation.
 
-## Stability Note
+When the body is a partial ItemCollection:
 
-This specification has evolved over the past couple years, and is used in production in a variety of deployments. It is 
-currently in a 'beta' state, with no major changes anticipated. For 1.0.0-rc.1, we remain fully aligned with [OGC API - 
-Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) Version 1.0, and we are working to stay aligned
-as the additional OGC API components mature. This may result in minor changes as things evolve. The STAC API 
-specification follows [Semantic Versioning](https://semver.org/), so once 1.0.0 is reached any breaking change 
-will require the spec to go to 2.0.0.
+- Must only create a new resource.
+- Each Item in the ItemCollection must have an id field.
+- Must return 409 if an Item exists for any of the same collection and id values.
+- Must populate the `collection` field in each Item from the URI.
+- Must return 201 without a Location header.
+- May create only some of the Items in the ItemCollection. Implementations are not
+  required to implement all-or-none sematics for this operation. For example, if an
+  ItemCollection contains two Items and one is successfully created and the other
+  fails to be created, the server is not required to then delete the successfully
+  created one. When only some of the Items in the ItemCollection are created, the
+  server should communicate this failure back to the client with an error status code.
 
-## Maturity Classification
+All cases:
 
-Conformance classes and extensions are meant to evolve to maturity, and thus may be in different states
-in terms of stability and number of implementations. All extensions must include a 
-maturity classification, so that STAC API spec users can easily get a sense of how much they can count
-on the extension. 
+- Must return 202 if the operation is queued for asynchronous execution.
 
-| Maturity Classification | Min Impl # | Description                                                                                                                                                | Stability                                                                                                 |
-| ----------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Proposal                | 0          | An idea put forward by a community member to gather feedback                                                                                               | Not stable - breaking changes almost guaranteed as implementers try out the idea.                         |
-| Pilot                   | 1          | Idea is fleshed out, with examples and a JSON schema, and implemented in one or more catalogs. Additional implementations encouraged to help give feedback | Approaching stability - breaking changes are not anticipated but can easily come from additional feedback |
-| Candidate               | 3          | A number of implementers are using it and are standing behind it as a solid extension. Can generally count on an extension at this maturity level          | Mostly stable, breaking changes require a new version and minor changes are unlikely.                     |
-| Stable                  | 6          | Highest current level of maturity. The community of extension maintainers commits to a STAC review process for any changes, which are not made lightly.    | Completely stable, all changes require a new version number and review process.                           |
-| Deprecated              | N/A        | A previous extension that has likely been superseded by a newer one or did not work out for some reason.                                                   | Will not be updated and may be removed in an upcoming major release.                                      |
+### PUT
 
-Maturity mostly comes through diverse implementations, so the minimum number of implementations
-column is the main gating function for an extension to mature. But extension authors can also
-choose to hold back the maturity advancement if they don't feel they are yet ready to commit to
-the less breaking changes of the next level.
+- Must populate the `id` and `collection` fields in the Item from the URI.
+- Must return 200 or 204 for a successful operation.
+- If 200 status code is returned, the server shall return the content of the updated resource for a successful operation.
+- Must return 202 if the operation is queued for asynchronous execution.
+- Must return 404 if no Item exists for this resource URI.
+- If the `id` or `collection` fields are different from those in the URI, status code 400 shall be returned.
+ 
+### PATCH
 
-A 'mature' classification level will likely be added once there are extensions that have been 
-stable for over a year and are used in twenty or more implementations.
+- Must populate the `id` and `collection` fields in the Item from the URI.
+- Must return 200 or 204 for a successful operation.
+- If status code 200 is returned, the server shall return the content of the updated resource for a successful operation.
+- May return the content of the updated resource for a successful operation.
+- Must return 202 if the operation is queued for asynchronous execution.
+- Must return 404 if no Item exists for this resource URI.
+- If the `id` or `collection` fields are different from those in the URI, status code 400 shall be returned.
 
-## Communication
+PATCH is compliant with [RFC 7386](https://tools.ietf.org/html/rfc7386).
 
-For any questions feel free to jump on our [gitter channel](https://gitter.im/SpatioTemporal-Asset-Catalog/Lobby) or email 
-our [google group](https://groups.google.com/forum/#!forum/stac-spec). The majority of communication about the evolution of 
-the specification takes place in the [issue tracker](https://github.com/radiantearth/stac-api-spec/issues) and in 
-[pull requests](https://github.com/radiantearth/stac-api-spec/pulls).
+### DELETE
 
-## In this repository
-
-The **[Overview](overview.md)** document describes all the various parts of the STAC API and how they fit together.
-
-**STAC API - Core Specification:**
-The *[core](core/)* folder describes the core STAC API specification that enables browsing catalogs and 
-retrieving the API capabilities. This includes the OpenAPI schemas for STAC Item, Catalog and Collection objects.
-
-**STAC API - Collections:**
-The *[collections](collections)* folder describes how a STAC API Catalog can advertise the Collections it contains.
-
-**STAC API - Features:**
-The *[ogcapi-features](ogcapi-features)* folder describes how a STAC API can fully implement [OGC API - 
-Features](http://docs.opengeospatial.org/is/17-069r3/17-069r3.html) to expose individual `items` endpoints for search of
-each STAC collection. It also includes extensions that can be used to further enhance OAFeat.
-
-**STAC API - Item Search Specification:**
-The *[item-search](item-search)* folder contains the Item Search specification, which enables 
-cross-collection search of STAC Item objects at a `search` endpoint, as well as a number of extensions. 
-
-**STAC API - Children:**
-The *[children](children)* folder describes how a STAC API Catalog can advertise the children (child catalogs or child collections)
-it contains.
-
-**STAC API - Browseable:**
-The *[browseable](browseable)* folder describes how a STAC API Catalog can advertise that all Items can be accessed
-by following through `child` and `item` link relations.
-
-**Extensions:**
-The *[extensions](extensions.md) document* describes how STAC incubates new functionality, and it links to the existing 
-extensions that can be added to enrich the functionality of a STAC API. Each has an OpenAPI yaml, but some of the yaml
-documents live as fragments in the [fragments/](fragments/) folder.
-
-**Fragments:**
-The *[fragments/](fragments/)* folder contains re-usable building blocks to be used in a STAC API, including common OpenAPI 
-schemas and parameters for behavior like sorting and filtering. Most all of them are compatible with 
-OGC API - Features, and the plan is to fully align the relevant functionality and have it be useful for all OAFeat implementations.
-OpenAPI YAML documents are provided for each extension with additional documentation and examples provided in a README.
-
-**STAC Specification:** This repository includes a '[sub-module](https://git-scm.com/book/en/v2/Git-Tools-Submodules)', which
-is a copy of the [STAC specification](stac-spec/) tagged at the latest stable version.
-Sub-modules aren't checked out by default, so to get the directory populated
-either use `git submodule update --init --recursive` if you've already cloned it,
-or clone from the start with `git clone --recursive git@github.com:radiantearth/stac-api-spec.git`. 
-
-**Implementation Recommendations:** Recommendations for implementing a STAC API may be found [here](implementation.md). 
-These are mostly concerns that apply to an entire API implementation and are not part of the specification itself.
-
-## Contributing
-
-Anyone building software that catalogs imagery or other geospatial assets is welcome to collaborate.
-Beforehand, please review our [guidelines for contributions and development process](CONTRIBUTING.md).
+- Must return 200 or 204 for a successful operation.
+- Must return a 202 if the operation is queued for asynchronous execution.
+- May return a 404 if no Item existed prior to the delete operation. Returning a 200 or 204 is also valid in this situation.
