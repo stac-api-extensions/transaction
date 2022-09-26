@@ -6,9 +6,9 @@
 - **Conformance URIs:**
   - <https://api.stacspec.org/v1.0.0-rc.1/ogcapi-features/extensions/transaction>
   - <http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/simpletx>
-- **Extension [Maturity Classification](https://github.com/radiantearth/stac-api-spec/README.md#maturity-classification):** Candidate
+- **Extension [Maturity Classification](https://github.com/radiantearth/stac-api-spec/tree/v1.0.0-rc.1/README.md#maturity-classification):** Candidate
 - **Dependencies**:
-  - [STAC API - Features](https://github.com/radiantearth/stac-api-spec/ogcapi-features/README.md)
+  - [STAC API - Features](https://github.com/radiantearth/stac-api-spec/tree/v1.0.0-rc.1/ogcapi-features/README.md)
 
 The core STAC API doesn't support adding, editing, or removing items.
 The transaction API extension supports the creation, editing, and deleting of items through POST, PUT, PATCH, and DELETE requests.
