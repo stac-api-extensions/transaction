@@ -1,4 +1,4 @@
-# STAC API - Transaction 
+# STAC API - Transaction Extension
 
 *based on [**OGC API - Features - Part 4: Simple Transactions**](https://www.ogc.org/standards/ogcapi-features)*
 
