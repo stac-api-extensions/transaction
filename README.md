@@ -36,6 +36,7 @@ work to get it incorporated.
 | `PUT /collections/{collectionId}/items/{featureId}`    | `application/json`  | partial Item                           | 200, 202, 204  | Updates an existing item by ID using a complete item description. |
 | `PATCH /collections/{collectionId}/items/{featureId}`  | `application/json`  | partial Item                           | 200, 202, 204  | Updates an existing item by ID using a partial item description.  |
 | `DELETE /collections/{collectionID}/items/{featureId}` | n/a                 | n/a                                    | 200, 202, 204  | Deletes an existing item by ID.                                   |
+| `PATCH /collections/{collectionID}`                    | `application/json`  | partial Collection                     | 200, 202, 204  | Updates an existing collection by ID using a partial collection description. |
 
 ### POST
 
@@ -75,7 +76,7 @@ All cases:
 - Must return 404 if no Item exists for this resource URI.
 - If the `id` or `collection` fields are different from those in the URI, status code 400 shall be returned.
  
-### PATCH
+### PATCH Item
 
 - Must populate the `id` and `collection` fields in the Item from the URI.
 - Must return 200 or 204 for a successful operation.
@@ -92,3 +93,14 @@ PATCH is compliant with [RFC 7386](https://tools.ietf.org/html/rfc7386).
 - Must return 200 or 204 for a successful operation.
 - Must return a 202 if the operation is queued for asynchronous execution.
 - May return a 404 if no Item existed prior to the delete operation. Returning a 200 or 204 is also valid in this situation.
+
+### PATCH Collection
+
+- Must populate the `id` fields in the Item from the URI.
+- Must return 200 or 204 for a successful operation.
+- If status code 200 is returned, the server shall return the content of the updated resource for a successful operation.
+- May return the content of the updated resource for a successful operation.
+- Must return 202 if the operation is queued for asynchronous execution.
+- Must return 404 if no Item exists for this resource URI.
+
+PATCH is compliant with [RFC 7386](https://tools.ietf.org/html/rfc7386).
