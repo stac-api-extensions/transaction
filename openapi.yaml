@@ -209,13 +209,55 @@ paths:
             application/json:
               schema:
                 $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/exception'
+  '/collections/{collectionId}':
+    parameters:
+      - $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/parameters/collectionId'
+      - $ref: '#/components/parameters/IfMatchOptional'
+    patch:
+      summary: patch an existing STAC Collection
+      description: patch an existing STAC Collection
+      operationId: patchCollection
+      tags:
+        - Transaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/patchCollection'
+      responses:
+        '200':
+          description: Status of the create request.
+          headers:
+            ETag:
+              schema:
+                type: string
+              description: A string to ensure the collection has not been modified
+          content:
+            application/json:
+              schema:
+                $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/collections'
+        '202':
+          description: The item was accepted for asynchronous action
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/responses/NotFound'
+        '500':
+          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/responses/ServerError'
+        default:
+          description: An error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/exception'
 components:
   parameters:
     IfMatch:
       name: If-Match
       in: header
       description: >-
-        Only take the action if the ETag of the item still matches
+        Only take the action if the ETag of the collection still matches
       required: true
       schema:
         type: string
@@ -319,6 +361,41 @@ components:
             $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/link'
         assets:
           $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/assets'
+    patchCollection:
+      description: >-
+        An object that contains at least a subset of the fields for a STAC Collection.
+      type: object
+      properties:
+        stac_version:
+          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/stac_version'
+        stac_extensions:
+          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/stac_extensions'
+        id:
+          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi-collections.yaml#/components/schemas/collectionId'
+        title:
+          description: human readable title of the collection
+          type: string
+        description:
+          type: string
+          description: >-
+            Detailed multi-line description to fully explain the collection.
+            [CommonMark 0.29](http://commonmark.org/) syntax MAY be used for
+            rich text representation.
+        links:
+          type: array
+          items:
+            $ref: 'https://api.stacspec.org/v1.0.0-rc.2/core/commons.yaml#/components/schemas/links'
+        assets:
+          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/core/commons.yaml#/components/schemas/assets'
+        providers:
+          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/core/commons.yaml#/components/schemas/providers'
+        license:
+          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/core/commons.yaml#/components/schemas/license'
+        keywords:
+          type: array
+          description: List of keywords describing the collection.
+          items:
+            type: string
   responses:
     BadRequest:
       description: The request was malformed or semantically invalid
