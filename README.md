@@ -1,31 +1,42 @@
-# STAC API - Transaction Extension
+# STAC API - Transaction Extension Specification
 
-*based on [**OGC API - Features - Part 4: Simple Transactions**](https://www.ogc.org/standards/ogcapi-features)*
+- [STAC API - Transaction Extension Specification](#stac-api---transaction-extension-specification)
+  - [Overview](#overview)
+  - [Methods](#methods)
+    - [POST](#post)
+    - [PUT](#put)
+    - [PATCH](#patch)
+    - [DELETE](#delete)
 
+## Overview
+
+- **Title:** Transaction
 - **OpenAPI specification:** [openapi.yaml](openapi.yaml)
 - **Conformance URIs:**
   - <https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/extensions/transaction>
   - <http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/simpletx>
-- **Extension [Maturity Classification](https://github.com/radiantearth/stac-api-spec/tree/v1.0.0-rc.2/README.md#maturity-classification):** Candidate
+- **Scope:** STAC API - Features
+- **[Extension Maturity Classification](https://github.com/radiantearth/stac-api-spec/tree/main/README.md#maturity-classification):** Candidate
 - **Dependencies**:
   - [STAC API - Features](https://github.com/radiantearth/stac-api-spec/tree/v1.0.0-rc.2/ogcapi-features/README.md)
+- **Owner**: none
 
 The core STAC API doesn't support adding, editing, or removing items.
 The transaction API extension supports the creation, editing, and deleting of items through POST, PUT, PATCH, and DELETE requests.
 
-STAC Transactions are based on the [OGC API - Features](https://ogcapi.ogc.org/features/) transactions, as 
+STAC Transactions are based on the [OGC API - Features](https://ogcapi.ogc.org/features/) transactions, as
 specified in [Part 4: Simple Transactions](http://docs.opengeospatial.org/DRAFTS/20-002.html). The core
 OGC standard lays out the end points for transactions, without specifying any content types. For STAC we
 use STAC Item objects in our transactions, and those transaction must be done at the OGC API - Features endpoints,
-under `/collections/{collectionID}/items`. The OpenAPI document (specified as an OpenAPI fragment that 
+under `/collections/{collectionID}/items`. The OpenAPI document (specified as an OpenAPI fragment that
 gets build in the full STAC OpenAPI document) simply gives the STAC examples of using the
 Simple Transactions API mechanism.
 
-OGC API [Simple Transactions](http://docs.opengeospatial.org/DRAFTS/20-002.html) is still a draft standard, so 
+OGC API [Simple Transactions](http://docs.opengeospatial.org/DRAFTS/20-002.html) is still a draft standard, so
 once it is released STAC will align to a released one, but we anticipate few changes as it is a very simple document.
 
 STAC Transactions additionally support optimistic locking through use of the ETag header, as specified in the
-OpenAPI document. This is not currently specified in *OGC API - Features*, but it is compatible and we will 
+OpenAPI document. This is not currently specified in *OGC API - Features*, but it is compatible and we will
 work to get it incorporated.
 
 ## Methods
@@ -74,7 +85,7 @@ All cases:
 - Must return 202 if the operation is queued for asynchronous execution.
 - Must return 404 if no Item exists for this resource URI.
 - If the `id` or `collection` fields are different from those in the URI, status code 400 shall be returned.
- 
+
 ### PATCH
 
 - Must populate the `id` and `collection` fields in the Item from the URI.
