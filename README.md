@@ -76,7 +76,7 @@ All cases:
 - Must return 202 if the operation is queued for asynchronous execution.
 - Must return 404 if no Item exists for this resource URI.
 - If the `id` or `collection` fields are different from those in the URI, status code 400 shall be returned.
- 
+
 ### PATCH Item
 
 - Must populate the `id` and `collection` fields in the Item from the URI.
@@ -105,7 +105,6 @@ PATCH is compliant with [RFC 7386](https://tools.ietf.org/html/rfc7386).
 - Must return 404 if no Item exists for this resource URI.
 
 PATCH is compliant with [RFC 7386](https://tools.ietf.org/html/rfc7386).
-
 
 ### DELETE Collection
 
