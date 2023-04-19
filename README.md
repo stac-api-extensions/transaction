@@ -30,15 +30,16 @@ work to get it incorporated.
 
 ## Methods
 
-| Path                                                   | Content-Type Header | Body                                   | Success Status | Description                                                       |
-| ------------------------------------------------------ | ------------------- | -------------------------------------- | -------------- | ----------------------------------------------------------------- |
-| `POST /collections/{collectionID}/items`               | `application/json`  | partial Item or partial ItemCollection | 201, 202       | Adds a new item to a collection.                                  |
-| `PUT /collections/{collectionId}/items/{featureId}`    | `application/json`  | partial Item                           | 200, 202, 204  | Updates an existing item by ID using a complete item description. |
-| `PATCH /collections/{collectionId}/items/{featureId}`  | `application/json`  | partial Item                           | 200, 202, 204  | Updates an existing item by ID using a partial item description.  |
-| `DELETE /collections/{collectionID}/items/{featureId}` | n/a                 | n/a                                    | 200, 202, 204  | Deletes an existing item by ID.                                   |
+| Path                                                   | Content-Type Header | Body                                   | Success Status | Description                                                                  |
+| ------------------------------------------------------ | ------------------- | -------------------------------------- | -------------- | ---------------------------------------------------------------------------- |
+| `POST /collections/{collectionID}/items`               | `application/json`  | partial Item or partial ItemCollection | 201, 202       | Adds a new item to a collection.                                             |
+| `PUT /collections/{collectionId}/items/{featureId}`    | `application/json`  | partial Item                           | 200, 202, 204  | Updates an existing item by ID using a complete item description.            |
+| `PATCH /collections/{collectionId}/items/{featureId}`  | `application/json`  | partial Item                           | 200, 202, 204  | Updates an existing item by ID using a partial item description.             |
+| `DELETE /collections/{collectionID}/items/{featureId}` | n/a                 | n/a                                    | 200, 202, 204  | Deletes an existing item by ID.                                              |
 | `PATCH /collections/{collectionID}`                    | `application/json`  | partial Collection                     | 200, 202, 204  | Updates an existing collection by ID using a partial collection description. |
+| `DELETE /collections/{collectionID}`                   | n/a                 | n/a                                    | 200, 202, 204  | Deletes an entire collection by ID and all related items                     |
 
-### POST
+### POST Item
 
 When the body is a partial Item:
 
@@ -67,7 +68,7 @@ All cases:
 
 - Must return 202 if the operation is queued for asynchronous execution.
 
-### PUT
+### PUT Item
 
 - Must populate the `id` and `collection` fields in the Item from the URI.
 - Must return 200 or 204 for a successful operation.
@@ -88,7 +89,7 @@ All cases:
 
 PATCH is compliant with [RFC 7386](https://tools.ietf.org/html/rfc7386).
 
-### DELETE
+### DELETE Item
 
 - Must return 200 or 204 for a successful operation.
 - Must return a 202 if the operation is queued for asynchronous execution.
@@ -104,3 +105,10 @@ PATCH is compliant with [RFC 7386](https://tools.ietf.org/html/rfc7386).
 - Must return 404 if no Item exists for this resource URI.
 
 PATCH is compliant with [RFC 7386](https://tools.ietf.org/html/rfc7386).
+
+
+### DELETE Collection
+
+- Must return 200 or 204 for a successful operation.
+- Must return a 202 if the operation is queued for asynchronous execution.
+- May return a 404 if no Item existed prior to the delete operation. Returning a 200 or 204 is also valid in this situation.
