@@ -12,7 +12,7 @@
 - **Title:** Transaction
 - **OpenAPI specification:** [openapi.yaml](openapi.yaml)
 - **Conformance URIs:**
-  - <https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/extensions/transaction>
+  - <https://api.stacspec.org/v1.0.0/ogcapi-features/extensions/transaction>
 - **Scope:** STAC API - Features
 - **[Extension Maturity Classification](https://github.com/radiantearth/stac-api-spec/tree/main/README.md#maturity-classification):** Candidate
 - **Dependencies**:
