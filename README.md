@@ -1,52 +1,42 @@
-# STAC API - Transaction Extension Specification
+# STAC API - Transaction Extension Specification <!-- omit in toc -->
 
-- [STAC API - Transaction Extension Specification](#stac-api---transaction-extension-specification)
-  - [Overview](#overview)
-  - [Methods](#methods)
-    - [POST](#post)
-    - [PUT](#put)
-    - [PATCH](#patch)
-    - [DELETE](#delete)
+- [Overview](#overview)
+- [Methods](#methods)
+  - [POST](#post)
+  - [PUT](#put)
+  - [PATCH](#patch)
+  - [DELETE](#delete)
 
 ## Overview
 
 - **Title:** Transaction
 - **OpenAPI specification:** [openapi.yaml](openapi.yaml)
 - **Conformance URIs:**
-  - <https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/extensions/transaction>
-  - <http://www.opengis.net/spec/ogcapi-features-4/1.0/conf/simpletx>
+  - <https://api.stacspec.org/v1.0.0/ogcapi-features/extensions/transaction>
 - **Scope:** STAC API - Features
 - **[Extension Maturity Classification](https://github.com/radiantearth/stac-api-spec/tree/main/README.md#maturity-classification):** Candidate
 - **Dependencies**:
-  - [STAC API - Features](https://github.com/radiantearth/stac-api-spec/tree/v1.0.0-rc.2/ogcapi-features/README.md)
+  - [STAC API - Features](https://github.com/radiantearth/stac-api-spec/tree/v1.0.0/ogcapi-features/README.md)
 - **Owner**: none
 
-The core STAC API doesn't support adding, editing, or removing items.
-The transaction API extension supports the creation, editing, and deleting of items through POST, PUT, PATCH, and DELETE requests.
-
-STAC Transactions are based on the [OGC API - Features](https://ogcapi.ogc.org/features/) transactions, as
-specified in [Part 4: Simple Transactions](http://docs.opengeospatial.org/DRAFTS/20-002.html). The core
+The STAC API Transaction Extension adds support for the creation, modification, and deletion
+of items through POST, PUT, PATCH, and DELETE method requests.
+The behavior described here is based on the [OGC API - Features](https://ogcapi.ogc.org/features/) transactions as
+specified in [OGC API - Features - Part 4: Create, Replace, Update and Delete](http://docs.opengeospatial.org/DRAFTS/20-002.html). The core
 OGC standard lays out the end points for transactions, without specifying any content types. For STAC we
 use STAC Item objects in our transactions, and those transaction must be done at the OGC API - Features endpoints,
-under `/collections/{collectionID}/items`. The OpenAPI document (specified as an OpenAPI fragment that
-gets build in the full STAC OpenAPI document) simply gives the STAC examples of using the
-Simple Transactions API mechanism.
+under `/collections/{collectionId}/items`.
 
-OGC API [Simple Transactions](http://docs.opengeospatial.org/DRAFTS/20-002.html) is still a draft standard, so
-once it is released STAC will align to a released one, but we anticipate few changes as it is a very simple document.
-
-STAC Transactions additionally support optimistic locking through use of the ETag header, as specified in the
-OpenAPI document. This is not currently specified in *OGC API - Features*, but it is compatible and we will
-work to get it incorporated.
+Additionaly, the STAC API Transaction Extension supports optimistic locking through use of the ETag header.
 
 ## Methods
 
 | Path                                                   | Content-Type Header | Body                                   | Success Status | Description                                                       |
 | ------------------------------------------------------ | ------------------- | -------------------------------------- | -------------- | ----------------------------------------------------------------- |
-| `POST /collections/{collectionID}/items`               | `application/json`  | partial Item or partial ItemCollection | 201, 202       | Adds a new item to a collection.                                  |
+| `POST /collections/{collectionId}/items`               | `application/json`  | partial Item or partial ItemCollection | 201, 202       | Adds a new item to a collection.                                  |
 | `PUT /collections/{collectionId}/items/{featureId}`    | `application/json`  | partial Item                           | 200, 202, 204  | Updates an existing item by ID using a complete item description. |
 | `PATCH /collections/{collectionId}/items/{featureId}`  | `application/json`  | partial Item                           | 200, 202, 204  | Updates an existing item by ID using a partial item description.  |
-| `DELETE /collections/{collectionID}/items/{featureId}` | n/a                 | n/a                                    | 200, 202, 204  | Deletes an existing item by ID.                                   |
+| `DELETE /collections/{collectionId}/items/{featureId}` | n/a                 | n/a                                    | 200, 202, 204  | Deletes an existing item by ID.                                   |
 
 ### POST
 

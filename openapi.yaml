@@ -7,19 +7,19 @@ info:
     specification.
   contact:
     name: STAC Specification
-    url: 'http://stacspec.org'
+    url: "http://stacspec.org"
   license:
     name: Apache License 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+    url: "http://www.apache.org/licenses/LICENSE-2.0"
 tags:
   - name: Transaction
     description: >-
       STAC-specific operations to add, remove, and edit items within OGC API - Features
       collections.
 paths:
-  '/collections/{collectionId}/items':
+  "/collections/{collectionId}/items":
     parameters:
-      - $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/parameters/collectionId'
+      - $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/parameters/collectionId"
     post:
       summary: add a new STAC Item or Items in an ItemCollection to a collection
       description: create a new STAC Item r Items in an ItemCollection in a specific collection
@@ -31,10 +31,10 @@ paths:
           application/json:
             schema:
               oneOf:
-                - $ref: '#/components/schemas/postOrPutItemCollection'
-                - $ref: '#/components/schemas/postOrPutItem'
+                - $ref: "#/components/schemas/postOrPutItemCollection"
+                - $ref: "#/components/schemas/postOrPutItem"
       responses:
-        '201':
+        "201":
           description: Status of the create request.
           headers:
             Location:
@@ -49,25 +49,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/item'
-        '202':
+                $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/item"
+        "202":
           description: The item was accepted for asynchronous action
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/responses/NotFound'
-        '500':
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/responses/ServerError'
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/responses/NotFound"
+        "500":
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/responses/Error"
         default:
           description: An error occurred.
           content:
             application/json:
               schema:
-                $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/exception'
-  '/collections/{collectionId}/items/{featureId}':
+                $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/exception"
+  "/collections/{collectionId}/items/{featureId}":
     parameters:
-      - $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/parameters/collectionId'
-      - $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/parameters/featureId'
+      - $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/parameters/collectionId"
+      - $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/parameters/featureId"
     get:
       tags:
         - Transaction
@@ -76,7 +76,7 @@ paths:
         with id `collectionId`.
       operationId: getFeature
       responses:
-        '200':
+        "200":
           description: Adds a ETag header to the response specified in STAC API - Features
           headers:
             ETag:
@@ -92,15 +92,15 @@ paths:
       tags:
         - Transaction
       parameters:
-        - $ref: '#/components/parameters/IfMatch'
+        - $ref: "#/components/parameters/IfMatch"
       requestBody:
         description: The request body must contain a representation of the replacement item.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/postOrPutItem'
+              $ref: "#/components/schemas/postOrPutItem"
       responses:
-        '200':
+        "200":
           description: The item was replaced
           headers:
             ETag:
@@ -110,30 +110,30 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/item'
-        '202':
+                $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/item"
+        "202":
           description: The item was accepted for asynchronous action
-        '204':
+        "204":
           description: The item was replaced
           headers:
             ETag:
               schema:
                 type: string
               description: An updated string to track changes
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/responses/NotFound'
-        '412':
-          $ref: '#/components/responses/PreconditionFailed'
-        '500':
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/responses/ServerError'
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/responses/NotFound"
+        "412":
+          $ref: "#/components/responses/PreconditionFailed"
+        "500":
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/responses/Error"
         default:
           description: An error occurred.
           content:
             application/json:
               schema:
-                $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/exception'
+                $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/exception"
     patch:
       summary: update an existing feature by Id with a partial item definition
       description: >-
@@ -143,14 +143,14 @@ paths:
       tags:
         - Transaction
       parameters:
-        - $ref: '#/components/parameters/IfMatchOptional'
+        - $ref: "#/components/parameters/IfMatchOptional"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/patchItem'
+              $ref: "#/components/schemas/patchItem"
       responses:
-        '200':
+        "200":
           description: The item was replaced
           headers:
             ETag:
@@ -160,28 +160,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/item'
-        '202':
+                $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/item"
+        "202":
           description: The item was accepted for asynchronous action
-        '204':
+        "204":
           description: Status of the update request.
           headers:
             ETag:
               schema:
                 type: string
               description: A string to ensure the item has not been modified
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/responses/NotFound'
-        '500':
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/responses/ServerError'
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/responses/NotFound"
+        "500":
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/responses/Error"
         default:
           description: An error occurred.
           content:
             application/json:
               schema:
-                $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/exception'
+                $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/exception"
     delete:
       summary: delete an existing feature by Id
       description: Use this method to delete an existing feature.
@@ -189,26 +189,26 @@ paths:
       tags:
         - Transaction
       parameters:
-        - $ref: '#/components/parameters/IfMatch'
+        - $ref: "#/components/parameters/IfMatch"
       responses:
-        '200':
+        "200":
           description: The resource was deleted.
-        '202':
+        "202":
           description: The operation was accepted for asynchronous executiona.
-        '204':
+        "204":
           description: The resource was deleted.
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/responses/NotFound'
-        '500':
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/responses/ServerError'
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/responses/NotFound"
+        "500":
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/responses/Error"
         default:
           description: An error occurred.
           content:
             application/json:
               schema:
-                $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/exception'
+                $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/exception"
 components:
   parameters:
     IfMatch:
@@ -234,25 +234,25 @@ components:
       type: object
       properties:
         stac_version:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/stac_version'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/stac_version"
         stac_extensions:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/stac_extensions'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/stac_extensions"
         id:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/itemId'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/itemId"
         bbox:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/bbox'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/bbox"
         geometry:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/geometryGeoJSON'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/geometryGeoJSON"
         type:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/itemType'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/itemType"
         properties:
-          $ref: '#/components/schemas/patchItemProperties'
+          $ref: "#/components/schemas/patchItemProperties"
         links:
           type: array
           items:
-            $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/link'
+            $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/link"
         assets:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/assets'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/assets"
     patchItemProperties:
       description: >-
         An object that contains at least a subset of a valid STAC Item Properties object.
@@ -260,7 +260,7 @@ components:
       additionalProperties: true
       properties:
         datetime:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/datetime'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/datetime"
     postOrPutItemCollection:
       description: >-
         A GeoJSON FeatureCollection augmented with foreign members that contain values relevant to a STAC entity
@@ -276,14 +276,14 @@ components:
         features:
           type: array
           items:
-            $ref: '#/components/schemas/postOrPutItem'
+            $ref: "#/components/schemas/postOrPutItem"
         links:
           description: >-
             An array of links. Can be used for pagination, e.g. by providing a link
             with the `next` relation type.
           type: array
           items:
-            $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/link'
+            $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/link"
           example:
             - rel: next
               href: >-
@@ -300,35 +300,35 @@ components:
         - properties
       properties:
         stac_version:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/stac_version'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/stac_version"
         stac_extensions:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/stac_extensions'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/stac_extensions"
         id:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/itemId'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/itemId"
         bbox:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/bbox'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/bbox"
         geometry:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/geometryGeoJSON'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/geometryGeoJSON"
         type:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/itemType'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/itemType"
         properties:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/properties'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/properties"
         links:
           type: array
           items:
-            $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/link'
+            $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/link"
         assets:
-          $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/assets'
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/assets"
   responses:
     BadRequest:
       description: The request was malformed or semantically invalid
       content:
         application/json:
           schema:
-            $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/exception'
+            $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/exception"
     PreconditionFailed:
       description: Some condition specified by the request could not be met in the server
       content:
         application/json:
           schema:
-            $ref: 'https://api.stacspec.org/v1.0.0-rc.2/ogcapi-features/openapi.yaml#/components/schemas/exception'
+            $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/exception"
