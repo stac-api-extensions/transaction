@@ -86,7 +86,9 @@ All cases:
 - Must return 404 if no Item exists for this resource URI.
 - If the `id` or `collection` fields are different from those in the URI, status code 400 shall be returned.
 
-PATCH is compliant with [RFC 7386](https://tools.ietf.org/html/rfc7386).
+The default standard for PATCH is [RFC 7396](https://tools.ietf.org/html/rfc7396).
+Optionally, in addition to RFC 7396, [RFC 6902](https://tools.ietf.org/html/rfc6902) can be supported with the two methods
+being distinguished via the Accept/Content-Type header.
 
 ### DELETE
 

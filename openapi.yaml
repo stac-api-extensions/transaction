@@ -22,7 +22,7 @@ paths:
       - $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/parameters/collectionId"
     post:
       summary: add a new STAC Item or Items in an ItemCollection to a collection
-      description: create a new STAC Item r Items in an ItemCollection in a specific collection
+      description: create a new STAC Item or Items in an ItemCollection in a specific collection
       operationId: postFeature
       tags:
         - Transaction
@@ -137,8 +137,12 @@ paths:
     patch:
       summary: update an existing feature by Id with a partial item definition
       description: >-
-        Use this method to update an existing feature. Requires a GeoJSON
-        fragment (containing the fields to be updated) be submitted.
+        Use this method to update an existing feature. The default method, merge-patch adheres to RF7396
+        and requires a GeoJSON fragment (containing the fields to be updated) be submitted. Null values in
+        the merge patch are given special meaning to indicate the removal of existing values in the
+        target. Optionally json-patch, which adheres to RF6902 and requires a sequence of opperations to
+        perform on the target feature, can be included. The two methods can be distinguished via the
+        Accept/Content-Type header.
       operationId: patchFeature
       tags:
         - Transaction
@@ -148,10 +152,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/patchItem"
+              $ref: "#/components/schemas/mergePatchItem"
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/mergePatchItem"
+          application/json-patch+json:
+            schema:
+              $ref: "#/components/schemas/patchRequest"
       responses:
         "200":
-          description: The item was replaced
+          description: The item was updated
           headers:
             ETag:
               schema:
@@ -162,7 +172,7 @@ paths:
               schema:
                 $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/item"
         "202":
-          description: The item was accepted for asynchronous action
+          description: The request was accepted for asynchronous action
         "204":
           description: Status of the update request.
           headers:
@@ -228,9 +238,74 @@ components:
       schema:
         type: string
   schemas:
-    patchItem:
+    patchRequest:
       description: >-
-        An object that contains at least a subset of the fields for a STAC Item.
+        An array that containing the sequence of opperations to apply to the target item.
+      type: array
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/patchRequestAddReplaceTest'
+          - $ref: '#/components/schemas/patchRequestRemove'
+          - $ref: '#/components/schemas/patchRequestMoveCopy'
+    patchRequestAddReplaceTest:
+      type: object
+      additionalProperties: false
+      required:
+        - value
+        - op
+        - path
+      properties:
+        path:
+          description: A JSON Pointer path.
+          type: string
+        value:
+          description: The value to add, replace or test.
+        op:
+          description: The operation to perform.
+          type: string
+          enum:
+            - add
+            - replace
+            - test
+    patchRequestRemove:
+      type: object
+      additionalProperties: false
+      required:
+        - op
+        - path
+      properties:
+        path:
+          description: A JSON Pointer path.
+          type: string
+        op:
+          description: The operation to perform.
+          type: string
+          enum:
+            - remove
+    patchRequestMoveCopy:
+      type: object
+      additionalProperties: false
+      required:
+        - from
+        - op
+        - path
+      properties:
+        path:
+          description: A JSON Pointer path.
+          type: string
+        op:
+          description: The operation to perform.
+          type: string
+          enum:
+            - move
+            - copy
+        from:
+          description: A JSON Pointer path.
+          type: string
+    mergePatchItem:
+      description: >-
+        An object that contains at least a subset of the fields for a STAC Item. Null values in the merge
+        patch are given special meaning to indicate the removal of existing values in the target.
       type: object
       properties:
         stac_version:

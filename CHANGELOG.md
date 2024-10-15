@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Support for [RFC 6902](https://tools.ietf.org/html/rfc6902) [#14](https://github.com/stac-api-extensions/transaction/pull/14)
+
+### Changed
+
+- Updated of [RFC 7386](https://tools.ietf.org/html/rfc7386) to [RFC 7396](https://tools.ietf.org/html/rfc7396) [#14](https://github.com/stac-api-extensions/transaction/pull/14)
+
 ## [v1.0.0-rc.3] - 2023-09-28
 
 - Remove assertion that this will align with OAF Part 4.
