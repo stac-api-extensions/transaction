@@ -1,6 +1,7 @@
 # STAC API - Transaction Extension Specification <!-- omit in toc -->
 
 - [Overview](#overview)
+- [Relationship to OGC API - Features - Part 4](#relationship-to-ogc-api---features---part-4)
 - [Methods](#methods)
   - [POST](#post)
   - [PUT](#put)
@@ -22,12 +23,31 @@
 The STAC API Transaction Extension adds support for the creation, modification, and deletion
 of items through POST, PUT, PATCH, and DELETE method requests.
 The behavior described here is based on the [OGC API - Features](https://ogcapi.ogc.org/features/) transactions as
-specified in [OGC API - Features - Part 4: Create, Replace, Update and Delete](http://docs.opengeospatial.org/DRAFTS/20-002.html). The core
-OGC standard lays out the end points for transactions, without specifying any content types. For STAC we
+specified in the draft [OGC API - Features - Part 4: Create, Replace, Update and Delete](https://docs.ogc.org/DRAFTS/20-002r2.html).
+The core OGC standard lays out the end points for transactions, without specifying any content types. For STAC we
 use STAC Item objects in our transactions, and those transaction must be done at the OGC API - Features endpoints,
 under `/collections/{collectionId}/items`.
 
 Additionaly, the STAC API Transaction Extension supports optimistic locking through use of the ETag header.
+
+## Relationship to OGC API - Features - Part 4
+
+- OGC API - Features - Part 4 is still a draft. This section refers to
+  [1.0.0-draft.3](https://docs.ogc.org/DRAFTS/20-002r2.html)
+  ([editor's source](https://github.com/opengeospatial/ogcapi-features/tree/302f85a/extensions/transactions/create-replace-update-delete)).
+- This extension aims to align with Part 4 once it is published. The work is tracked in
+  [#11](https://github.com/stac-api-extensions/transaction/issues/11).
+- Until then, this extension does not advertise any Part 4 conformance class.
+
+The following differences from Part 4 are intentional and specific to STAC:
+
+- POST requires a client-supplied `id` and returns 409 if an Item with that `id` already exists in the collection.
+  Part 4 lets the server assign the id, and permits it to use the id supplied by the client.
+- POST also accepts an ItemCollection. Part 4 covers single resources only. This is planned to move to a separate
+  bulk-items extension ([#16](https://github.com/stac-api-extensions/transaction/pull/16)), so that
+  `/collections/{collectionId}/items` stays single-item as in Part 4.
+
+Other differences are being worked through in [#11](https://github.com/stac-api-extensions/transaction/issues/11).
 
 ## Methods
 
