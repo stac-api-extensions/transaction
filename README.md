@@ -34,11 +34,14 @@ Additionaly, the STAC API Transaction Extension supports optimistic locking thro
 | Path                                                   | Content-Type Header | Body                                   | Success Status | Description                                                       |
 | ------------------------------------------------------ | ------------------- | -------------------------------------- | -------------- | ----------------------------------------------------------------- |
 | `POST /collections/{collectionId}/items`               | `application/json`  | partial Item or partial ItemCollection | 201, 202       | Adds a new item to a collection.                                  |
+| `POST /collections/{collectionId}/bulk_items`          | `application/json`  | partial ItemCollection                 | 201, 202       | Adds multiple items to a collection in a single request.          |
 | `PUT /collections/{collectionId}/items/{featureId}`    | `application/json`  | partial Item                           | 200, 202, 204  | Updates an existing item by ID using a complete item description. |
 | `PATCH /collections/{collectionId}/items/{featureId}`  | `application/json`  | partial Item                           | 200, 202, 204  | Updates an existing item by ID using a partial item description.  |
 | `DELETE /collections/{collectionId}/items/{featureId}` | n/a                 | n/a                                    | 200, 202, 204  | Deletes an existing item by ID.                                   |
 
 ### POST
+
+#### POST /collections/{collectionId}/items
 
 When the body is a partial Item:
 
@@ -66,6 +69,19 @@ When the body is a partial ItemCollection:
 All cases:
 
 - Must return 202 if the operation is queued for asynchronous execution.
+
+#### POST /collections/{collectionId}/bulk_items
+
+This is an alternate version of the `POST /collections/{collectionId}/items` where the body is a partial ItemCollection. 
+
+- Must only create new resources.
+- Must accept a partial ItemCollection containing multiple Items.
+- Each Item in the ItemCollection must have an id field.
+- Must return 409 if an Item exists for any of the same collection and id values.
+- Must populate the `collection` field in each Item from the URI.
+- Must return 201 with a response body containing the status and number of items created.
+- Must return 202 if the operation is queued for asynchronous execution.
+- May create only some of the Items in the ItemCollection. Implementations are not required to implement all-or-none semantics.
 
 ### PUT
 

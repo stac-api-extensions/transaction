@@ -17,6 +17,53 @@ tags:
       STAC-specific operations to add, remove, and edit items within OGC API - Features
       collections.
 paths:
+  "/collections/{collectionId}/bulk_items":
+    parameters:
+      - $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/parameters/collectionId"
+    post:
+      summary: Add multiple STAC Items to a collection in a single request
+      description: Create multiple STAC Items in a specific collection using a single request. This endpoint is optimized for bulk insertions.
+      operationId: bulkPostFeatures
+      tags:
+        - Transaction
+      requestBody:
+        description: The request body must contain a FeatureCollection of STAC Items to insert
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/postOrPutItemCollection"
+      responses:
+        "201":
+          description: The items were created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - created
+                properties:
+                  status:
+                    type: string
+                    enum: [success]
+                  created:
+                    type: integer
+                    description: Number of items successfully created
+        "202":
+          description: The items were accepted for asynchronous processing
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/responses/NotFound"
+        "500":
+          $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/responses/Error"
+        default:
+          description: An error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/schemas/exception"
+
   "/collections/{collectionId}/items":
     parameters:
       - $ref: "https://api.stacspec.org/v1.0.0/ogcapi-features/openapi.yaml#/components/parameters/collectionId"
