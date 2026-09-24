@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- `openapi.yaml`: declare the `409` response on `POST /collections/{collectionId}/items`, which the README
+  already requires when an Item with the same `collection` and `id` exists.
+
 ## [v1.0.0-rc.3] - 2023-09-28
 
 - Remove assertion that this will align with OAF Part 4.
