@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `README.md`: restore the statement of intent to align with OGC API - Features - Part 4, list the intentional
+  STAC-specific differences, and replace the dead Part 4 link.
+
 ### Fixed
 
 - `openapi.yaml`: declare the `409` response on `POST /collections/{collectionId}/items`, which the README
